@@ -1,0 +1,1 @@
+worker: java -cp target/classes:target/dependency/twitter4j-core-4.0.7.jar CFBTwitterBot

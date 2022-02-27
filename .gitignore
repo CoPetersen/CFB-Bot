@@ -1,0 +1,8 @@
+target/
+.idea/*
+*.iws
+*.iml
+*.ipr
+twitter4j.properties
+*/nbproject/*
+*/dependency-reduced-pom.xml
