@@ -14,15 +14,15 @@ import twitter4j.TwitterFactory;
 /**
  *
  * @author Cole Petersen
- * 
+ *
  * CFBTwitterBot.java
- * 
+ *
  * Generates and tweets statements and questions about college football.
- * 
+ *
  */
 
 public class CFBTwitterBot {
-    
+
     static ArrayList<String> comments = new ArrayList<>();
     static ArrayList<String> teams = new ArrayList<>();
     static ArrayList<String> confs = new ArrayList<>();
@@ -31,25 +31,26 @@ public class CFBTwitterBot {
     static ArrayList<String> styles = new ArrayList<>();
     static ArrayList[] lists = {comments, teams, confs, phrases, actions, styles};
     static String[] types = {"comment", "team", "conf", "phrase", "action", "style"};
-    
+
 
     public static void main(String[] args) {
         run();
     }
-    
+
     public static void run() {
 
         lists = setLists();
-        
+
         while (true) {
 
             boolean exception = false; // used to try again if TwitterException thrown
 
             do {
-//                try {
+                try {
                     String comment = getComment(comments);
 
-                    // test
+                    // for testing
+                    /*
                     System.out.println(comment);
 
                     try {
@@ -57,25 +58,27 @@ public class CFBTwitterBot {
                     } catch (InterruptedException ex) {
                         Logger.getLogger(CFBTwitterBot.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                    */
 
                     // run
-//                    tweet(comment);
-//                    exception = false;
-//                } catch (TwitterException e) {
-//                    e.printStackTrace();
-//                    exception = true;
-//                }
+                    tweet(comment);
+                    exception = false;
+
+                } catch (TwitterException e) {
+                    e.printStackTrace();
+                    exception = true;
+                }
 
             } while (exception); // try again if exception thrown
 
-//            try {
-//                TimeUnit.HOURS.sleep(4);
-//            } catch (InterruptedException ex) {
-//                Logger.getLogger(CFBTwitterBot.class.getName()).log(Level.SEVERE, null, ex);
-//            }
+            try {
+                TimeUnit.HOURS.sleep(4);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(CFBTwitterBot.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
-    
+
     public static ArrayList[] setLists() {
         for (int i=0; i<6; i++) {
             try {
@@ -87,30 +90,18 @@ public class CFBTwitterBot {
                 Logger.getLogger(CFBTwitterBot.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
+
         return lists;
     }
-    
+
     public static String getComment(ArrayList<String> list) {
         Random random = new Random();
-        
+
         return addWords(list.get(random.nextInt(list.size())));
     }
-    
+
     public static String addWords(String incComment) {
 
-
-        Random random = new Random();
-
-        String comment = incComment
-            .replaceAll("#team", getWord("team"))
-            .replaceAll("#conf", getWord("conf"))
-            .replaceAll("#phrase", getWord("phrase"))
-            .replaceAll("#action", getWord("action"))
-            .replaceAll("#style", getWord("style"))
-            .replaceAll("#num", Integer.toString(random.nextInt(48) + 2));
-
-        /*
         String[] words = incComment.split(" ");
 
         StringBuilder builder = new StringBuilder();
@@ -120,7 +111,12 @@ public class CFBTwitterBot {
             if (w.startsWith("#")) {
                 String poundRemoved = w.substring(1);
                 String punc = "";
+                String suf = "";
                 char lastChar = poundRemoved.charAt(poundRemoved.length() - 1);
+                if (poundRemoved.contains("'s")) {
+                    poundRemoved = poundRemoved.substring(0, poundRemoved.indexOf("'s"));
+                    suf = "'s";
+                }
                 if(!Character.isLetter(lastChar)) {
                     punc = Character.toString(lastChar);
                 }
@@ -130,7 +126,7 @@ public class CFBTwitterBot {
                     words[i] = Integer.toString(random.nextInt(48) + 2);
                 }
                 else {
-                    words[i] = getWord(type) + punc;
+                    words[i] = getWord(type) + suf + punc;
                 }
                 if (i == 0) {
                     words[i] = words[i].substring(0, 1).toUpperCase() +
@@ -139,16 +135,15 @@ public class CFBTwitterBot {
             }
             builder.append(w);
         }
-        
+
         String comment = String.join(" ", words);
-        */
-        
+
         return comment;
     }
-    
+
     public static String getWord(String type) {
         Random random = new Random();
-        
+
         ArrayList<String> list;
         switch (type) {
             case "team":
@@ -170,7 +165,7 @@ public class CFBTwitterBot {
                 list = phrases;
                 break;
         }
-        
+
         return list.get(random.nextInt(list.size()));
     }
 
